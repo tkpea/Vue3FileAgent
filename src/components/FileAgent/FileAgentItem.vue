@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive, computed } from 'vue';
-import CloseButton from "@/components/CloseButton.vue";
-import {formatBytes} from "@/components/lib/Math";
+import CloseButton from "@/components/FileAgent/CloseButton.vue";
+import {formatBytes} from "@/components/FileAgent/lib/Math";
 
 export default defineComponent({
   components: {CloseButton},
