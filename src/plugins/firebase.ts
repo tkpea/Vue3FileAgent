@@ -7,3 +7,4 @@ const firebaseApp = firebase.initializeApp(config);
 
 export const fb = firebase
 export const storage = firebaseApp.storage()
+export const auth = firebaseApp.auth()

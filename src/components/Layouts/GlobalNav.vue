@@ -22,8 +22,56 @@
         </a>
       </div>
       <div>
-        <a href="#" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Download</a>
+        <teamplate v-if="!state.user">
+          <a href="#"
+             @click="login"
+             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white  hover:text-teal-500  mt-4 lg:mt-0">
+            Login
+          </a>
+        </teamplate>
+        <template v-else>
+          <a href="#"
+             @click="logout"
+             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white  hover:text-teal-500  mt-4 lg:mt-0">
+            Logout
+          </a>
+        </template>
       </div>
     </div>
   </nav>
 </template>
+<script lang="ts">
+import {defineComponent, onMounted, reactive} from 'vue';
+import auth from "@/plugins/auth";
+import store from "@/store"
+
+type State = {
+  user: IUser
+}
+export default defineComponent({
+  setup(){
+
+    const state = reactive<State>({
+      user: null
+    })
+    const login = async () => {
+      await auth.googleLogin()
+      state.user = store.state.user
+    }
+    const logout = async () => {
+      await auth.logout()
+      state.user = store.state.user
+    }
+
+    onMounted(async () => {
+      await auth.me()
+      state.user = store.state.user
+    })
+    return {
+      login,
+      logout,
+      state
+    }
+  }
+})
+</script>

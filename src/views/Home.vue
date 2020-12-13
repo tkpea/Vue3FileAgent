@@ -19,6 +19,8 @@ import { defineComponent } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue';
 import FileAgent from "@/components/FileAgent/FileAgent.vue"; // @ is an alias to /src
 import storage from "@/plugins/storage";
+import store from "@/store"
+
 export default defineComponent({
   name: 'Home',
   components: {
@@ -38,16 +40,16 @@ export default defineComponent({
      * @param file
      */
     onAdd(file: File) {
-      storage.create(file, 'files')
+      const directory = store.state.user.uid || "visitor"
+      storage.create(file, directory)
     },
     /**
      * ファイル削除時のハンドラー
      * @param index
      */
     onRemove(file: File) {
-      console.log(file)
-      console.log("onRemove")
-      storage.remove(file, 'files')
+      const directory = store.state.user.uid || "visitor"
+      storage.remove(file, directory)
     }
   }
 });

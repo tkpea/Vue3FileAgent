@@ -1,7 +1,7 @@
 
 import storageApi from "@/plugins/firebaseStorage";
 
-interface  IStorage {
+export interface  IStorage {
     load(): void
     remove(file: File, directory: string): void
     create(file: File, directory: string): void

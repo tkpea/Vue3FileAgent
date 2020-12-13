@@ -1,11 +1,11 @@
-import { InjectionKey, Ref } from 'vue'
 import {storage, fb} from './firebase'
+import { IStorage } from './storage'
+const storageApi: IStorage = {
+    load: () => {
 
-const storageApi = {
-    load:() => {
 
     },
-    remove:(file: File, directory: string) => {
+    remove: (file: File, directory: string) => {
         return new Promise((resolve, reject) => {
             const storageRef = storage.ref();
             const desertRef = storageRef.child(`${directory}/${file.name}`);
@@ -20,7 +20,7 @@ const storageApi = {
                 })
         })
     },
-    create:(file: File, directory: string) => {
+    create: (file: File, directory: string) => {
         return new Promise((resolve, reject) => {
             const storageRef = storage.ref();
             const ref = storageRef.child(`${directory}/${file.name}`);
@@ -53,7 +53,7 @@ const storageApi = {
                     }
                 },
                 () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                         console.log('File available at', downloadURL);
                         resolve(downloadURL)
                     });
@@ -62,6 +62,6 @@ const storageApi = {
         })
 
     }
-}
+};
 
 export default storageApi
