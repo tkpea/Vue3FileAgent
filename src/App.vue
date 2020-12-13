@@ -1,4 +1,5 @@
 <template>
+  <GlobalNav/>
   <router-view/>
 </template>
 
@@ -24,3 +25,9 @@
   }
 }
 </style>
+<script>
+import GlobalNav from "@/components/Layouts/GlobalNav";
+export default {
+  components: {GlobalNav}
+}
+</script>

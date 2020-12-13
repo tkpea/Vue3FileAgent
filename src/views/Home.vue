@@ -1,21 +1,23 @@
 <template>
   <div class="home">
-
-    <FileAgent
-        v-model:files="files"
-        @onRemove="onRemove"
-        @onAdd="onAdd"
-    />
-    <pre>
+    <section class="my-5 mx-5">
+      <FileAgent
+          v-model:files="files"
+          @onRemove="onRemove"
+          @onAdd="onAdd"
+      />
+      <pre>
       {{files}}
     </pre>
+    </section>
+
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue';
-import FileAgent from "@/components/FileAgent.vue"; // @ is an alias to /src
+import FileAgent from "@/components/FileAgent/FileAgent.vue"; // @ is an alias to /src
 import storage from "@/plugins/storage";
 export default defineComponent({
   name: 'Home',

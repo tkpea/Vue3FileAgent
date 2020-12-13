@@ -26,8 +26,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive } from 'vue';
-import FileAgentItem from "@/components/FileAgentItem.vue";
-import {readImage} from "@/components/FileAgentService";
+import FileAgentItem from "@/components/FileAgent/FileAgentItem.vue";
+import {readImage} from "@/components/FileAgent/FileAgentService";
 
 
 
@@ -71,7 +71,6 @@ export default defineComponent({
     }
 
     onMounted( () => {
-
       refs.input.value?.addEventListener("change",  (event: Event) => {
         const files = (<HTMLInputElement>event.target).files
         if (!files) return
@@ -85,13 +84,11 @@ export default defineComponent({
         state.isDrag = true
         event.preventDefault()
       })
-
       refs.dropZone.value?.addEventListener("dragleave", () => {
         state.isDrag = false
       })
       refs.dropZone.value?.addEventListener("drop",  (event) => {
         event.preventDefault()
-
         const files = event.dataTransfer?.files;
         if (!files) return
         pushItems(files)
@@ -137,7 +134,7 @@ export default defineComponent({
 
 </script>
 <style lang="scss" scoped>
-@import './../assets/mediaquery';
+@import '../../assets/mediaquery';
 
 .file_agent {
   border: 2px dashed #aaa;

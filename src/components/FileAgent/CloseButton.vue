@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../assets/mediaquery.scss">
+<link rel="stylesheet" href="../../assets/mediaquery.scss">
 <template>
 
   <button
