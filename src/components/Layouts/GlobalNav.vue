@@ -24,14 +24,14 @@
       <div>
         <teamplate v-if="!state.user">
           <a href="#"
-             @click="login"
+             @click="methods.login"
              class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white  hover:text-teal-500  mt-4 lg:mt-0">
             Login
           </a>
         </teamplate>
         <template v-else>
           <a href="#"
-             @click="logout"
+             @click="methods.logout"
              class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white  hover:text-teal-500  mt-4 lg:mt-0">
             Logout
           </a>
@@ -45,31 +45,52 @@ import {defineComponent, onMounted, reactive} from 'vue';
 import auth from "@/plugins/auth";
 import store from "@/store"
 
-type State = {
+interface State {
   user: IUser
+}
+interface Methods  {
+  login: Promise<void>
+  logout: Promise<void>
 }
 export default defineComponent({
   setup(){
-
     const state = reactive<State>({
       user: null
     })
-    const login = async () => {
-      await auth.googleLogin()
-      state.user = store.state.user
-    }
-    const logout = async () => {
-      await auth.logout()
-      state.user = store.state.user
+
+    const methods:Methods = {
+      login: async () => {
+        const user = await auth.googleLogin().catch(error => {
+          console.error(error)
+        })
+        if(user) {
+          store.commit('SET_USER', user)
+          state.user = store.state.user
+        }
+      },
+      logout: async () => {
+        const logout = await auth.logout().catch(error => {
+          console.error(error)
+        })
+        if(logout) {
+          store.commit('SET_USER', null)
+          state.user = store.state.user
+        }
+      }
     }
 
     onMounted(async () => {
-      await auth.me()
-      state.user = store.state.user
+      const user = await auth.me().catch(error => {
+        console.error(error)
+      })
+      if(user) {
+        store.commit('SET_USER', user)
+        state.user = store.state.user
+      }
     })
+
     return {
-      login,
-      logout,
+      methods,
       state
     }
   }

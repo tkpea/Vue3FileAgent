@@ -16,7 +16,7 @@ const authApi:IAuth = {
                     photoURL: res.user?.photoURL as string,
                     refreshToken: res.user?.refreshToken
                 }
-                store.commit('SET_USER', user)
+
                 resolve(res)
 
             }).catch(error => {
@@ -28,8 +28,6 @@ const authApi:IAuth = {
     logout: () => {
         return new Promise((resolve, reject) => {
             auth.signOut().then(function() {
-                // Sign-out successful.
-                store.commit('SET_USER', null)
                 resolve(true)
             }).catch((error: Error) => {
                 // An error happened.
@@ -48,7 +46,6 @@ const authApi:IAuth = {
                         photoURL: res?.photoURL as string,
                         refreshToken: res?.refreshToken
                     }
-                    store.commit('SET_USER', user)
                     resolve(user)
                 }
                 resolve(null)
