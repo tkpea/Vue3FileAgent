@@ -28,6 +28,9 @@
 import { defineComponent, ref, onMounted, reactive } from 'vue';
 import FileAgentItem from "@/components/FileAgentItem.vue";
 import {readImage} from "@/components/FileAgentService";
+
+
+
 interface PickFile {
   thumbnailPath?: string
   file: File
@@ -46,9 +49,18 @@ export default defineComponent({
     multiple: {
       type: true,
       default: true,
+    },
+    create: {
+      type: Function,
+      default: () => {}
+    },
+    remove: {
+      type: Function,
+      default: () => {}
     }
   },
-  setup: function (_, context) {
+  setup: function (props, {emit}) {
+
     const state = reactive<State>({
       isDrag: false,
       pickFiles: [],
@@ -59,6 +71,7 @@ export default defineComponent({
     }
 
     onMounted( () => {
+
       refs.input.value?.addEventListener("change",  (event: Event) => {
         const files = (<HTMLInputElement>event.target).files
         if (!files) return
@@ -88,6 +101,7 @@ export default defineComponent({
       })
     })
 
+
     const pushItems = async (files: FileList) => {
       for (let i = 0; i < files.length; i++) {
         const pickFile: PickFile = {
@@ -98,17 +112,18 @@ export default defineComponent({
           pickFile.thumbnailPath = await readImage(files[i]) as string
         }
         state.pickFiles.push(pickFile)
-        context.emit("onAdd", pickFile)
+        emit("onAdd", pickFile.file)
       }
-      context.emit("update:files", state.pickFiles.map((v) => {return v.file}))
+      emit("update:files", state.pickFiles.map((v) => {return v.file}))
 
     }
     const removeItem = (index: any) => {
       state.pickFiles[index].isShow = false
       window.setTimeout(() => {
+        const file = state.pickFiles[index].file
         state.pickFiles.splice(index, 1)
-        context.emit("update:files", state.pickFiles.map((v) => {return v.file}))
-        context.emit("onRemove", index)
+        emit("update:files", state.pickFiles.map((v) => {return v.file}))
+        emit("onRemove", file)
       }, 500)
     }
     return {
