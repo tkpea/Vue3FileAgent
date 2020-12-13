@@ -16,7 +16,7 @@
       </FileAgentItem>
       <div class="file_agent--cell file_agent--upload">
         <button class="button">
-          ファイルをアップロード
+          ファイルを選択
         </button>
       </div>
     </figure>
@@ -59,7 +59,6 @@ export default defineComponent({
     }
 
     onMounted( () => {
-
       refs.input.value?.addEventListener("change",  (event: Event) => {
         const files = (<HTMLInputElement>event.target).files
         if (!files) return
@@ -99,15 +98,17 @@ export default defineComponent({
           pickFile.thumbnailPath = await readImage(files[i]) as string
         }
         state.pickFiles.push(pickFile)
+        context.emit("onAdd", pickFile)
       }
       context.emit("update:files", state.pickFiles.map((v) => {return v.file}))
 
     }
-    const removeItem = (event: any) => {
-      state.pickFiles[event].isShow = false
+    const removeItem = (index: any) => {
+      state.pickFiles[index].isShow = false
       window.setTimeout(() => {
-        state.pickFiles.splice(event, 1)
+        state.pickFiles.splice(index, 1)
         context.emit("update:files", state.pickFiles.map((v) => {return v.file}))
+        context.emit("onRemove", index)
       }, 500)
     }
     return {
@@ -121,9 +122,13 @@ export default defineComponent({
 
 </script>
 <style lang="scss" scoped>
+@import './../assets/mediaquery';
+
 .file_agent {
   border: 2px dashed #aaa;
   padding: 2px;
+  cursor: pointer;
+
   .file_agent--file_input {
     display: none;
   }
@@ -135,8 +140,23 @@ export default defineComponent({
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, 25%);
 
+    @include mq-down(sm) {
+      grid-template-columns: repeat(2, 50%);
+    }
+    @include mq-up(sm) {
+      grid-template-columns: repeat(3, 33.3333%);
+    }
+    @include mq-up() {
+      grid-template-columns: repeat(4, 25%);
+    }
+
+    @include mq-up(lg) {
+      grid-template-columns: repeat(5, 20%);
+    }
+    @include mq-up(xl) {
+      grid-template-columns: repeat(6, 16.666666%);
+    }
     .file_agent--upload {
       display: flex;
       justify-content: center;
@@ -160,6 +180,7 @@ export default defineComponent({
         width: 100%;
         height: 100%;
         object-fit: cover;
+        cursor: pointer;
       }
     }
   }

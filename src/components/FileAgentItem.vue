@@ -1,6 +1,11 @@
 <template>
   <transition name="fade">
-    <div class="file_agent_item" :style="{backgroundColor: color}" v-show="isShow">
+    <div
+        class="file_agent_item"
+        :style="{backgroundColor: color}"
+        v-show="isShow"
+        ref="itemRef"
+    >
       <header class="header">
         <span class="title">{{file.name.split(".")[0]}}</span>
 
@@ -20,7 +25,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive, computed } from 'vue';
 import CloseButton from "@/components/CloseButton.vue";
-import {formatBytes} from "@/components/Math";
+import {formatBytes} from "@/components/lib/Math";
 
 export default defineComponent({
   components: {CloseButton},
@@ -47,14 +52,27 @@ export default defineComponent({
     const onRemove = () => {
       context.emit("remove")
     }
-    const bytes = formatBytes(props.file.size)
-    onMounted(() => {
-      console.log(props.file)
-    })
 
+    const bytes = formatBytes(props.file.size)
+    const itemRef = ref<HTMLDivElement>()
+    onMounted(() => {
+      itemRef.value?.addEventListener('click',(event) =>{
+        const url = window.URL.createObjectURL(props.file)
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.download = props.file.name;
+        a.href = url;
+        a.click();
+        a.remove();
+        a.remove()
+        window.URL.revokeObjectURL(url)
+        event.stopPropagation()
+      })
+    })
     return {
       onRemove,
-      bytes
+      bytes,
+      itemRef,
 
     }
   },
